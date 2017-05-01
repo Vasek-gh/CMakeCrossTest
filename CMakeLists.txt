@@ -1,11 +1,14 @@
-﻿cmake_minimum_required(VERSION 2.8)
+﻿cmake_minimum_required(VERSION 3.8)
 
 project(CMakeCrossTest)
 
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_FLAGS "-fnon-call-exceptions -fexceptions")
+set(CMAKE_CXX_FLAGS "-fnon-call-exceptions -fexceptions -S")
 set(CMAKE_EXE_LINKER_FLAGS "-static-libstdc++ -static")
 set(APPLICATION_NAME "CMakeCrossTest")
+
+#message(STATUS "M" ${CMAKE_CXX_FLAGS})
+set( CMAKE_VERBOSE_MAKEFILE on )
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(DEBUG true)
@@ -45,6 +48,26 @@ endif()
 if(AM64)
     add_definitions(-DAM64)
     message(STATUS "Adress model - 64bit")
+endif()
+
+if(WIN32)
+    add_definitions(-DWIN)
+    message(STATUS "Windows")
+endif()
+
+if(UNIX)
+    add_definitions(-DUNIX)
+    message(STATUS "Unix")
+endif()
+
+if(APPLE)
+    add_definitions(-DAPPLE)
+    message(STATUS "Apple")
+endif()
+
+if(MINGW)
+    add_definitions(-DMINGW)
+    message(STATUS "MinGw")
 endif()
 
 
