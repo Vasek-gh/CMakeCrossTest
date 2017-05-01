@@ -2,6 +2,7 @@
 #define ALIGN_H
 
 #include <stddef.h>
+#include <stdint.h>
 
 void* getAlignedMemory(size_t size, size_t alignment);
 void* freeAlignedMemory(void* memory);
