@@ -72,3 +72,22 @@ ArgumentException::ArgumentException(Exception::CharStr file, int line,
 {
 
 }
+
+//##########################################
+//
+// BadAllocException
+//
+//##########################################
+
+BadAllocException::BadAllocException(Exception::StdStr msg)
+    : Exception("BadAllocException", "", -1, msg)
+{
+
+}
+
+BadAllocException::BadAllocException(Exception::CharStr file, int line,
+                                     Exception::StdStr msg)
+    : Exception("BadAllocException", file, line, msg)
+{
+
+}

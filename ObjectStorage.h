@@ -3,8 +3,9 @@
 
 #include <new>
 #include <stdint.h>
-#include <memory>
+#include <stdlib.h>
 #include "Debug.h"
+#include "Exception.h"
 
 constexpr uintptr_t allign_value(uintptr_t base, uintptr_t allign)
 {
@@ -40,7 +41,7 @@ public:
         while (chunk) {
             auto prevChunk = chunk->prev();
             chunk->release();
-            _aligned_free(chunk->entry());
+            free(chunk->entry());
             chunk = prevChunk;
         }
     }
@@ -53,6 +54,7 @@ public:
             allocChunk(_currentChunk->size() * 2);
             newElement = _currentChunk->getElement();
             if (!newElement) {
+                RAISE(BadAllocException, "cannot get element after alloc");
                 throw std::bad_alloc();
             }
         }
@@ -115,7 +117,11 @@ private:
 
     void allocChunk(uint32_t size)
     {
-        void* chunkEntry = _aligned_malloc(EL_SIZE * size + CH_SIZE, EL_ALIGN);
+        void* chunkEntry = aligned_alloc(EL_ALIGN, EL_SIZE * size + CH_SIZE);
+        if (!chunkEntry) {
+            RAISE(BadAllocException, "aligned_alloc fail");
+        }
+
         Chunk* newChunk = (Chunk*)calcOffset(chunkEntry, size);
 
         ASSERT(reinterpret_cast<uintptr_t>(chunkEntry) % EL_ALIGN == 0, "bad chunk entry pointer");

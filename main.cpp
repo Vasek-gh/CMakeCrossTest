@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
 
     try
     {
-        //test();
+        test();
     }
     catch (...) {
         std::cerr << "exception" << std::endl;
