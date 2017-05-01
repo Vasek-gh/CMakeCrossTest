@@ -1,14 +1,11 @@
-﻿cmake_minimum_required(VERSION 3.8)
+﻿cmake_minimum_required(VERSION 2.8)
 
 project(CMakeCrossTest)
 
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_FLAGS "-fnon-call-exceptions -fexceptions -S")
+set(CMAKE_CXX_FLAGS "-fnon-call-exceptions -fexceptions")
 set(CMAKE_EXE_LINKER_FLAGS "-static-libstdc++ -static")
 set(APPLICATION_NAME "CMakeCrossTest")
-
-#message(STATUS "M" ${CMAKE_CXX_FLAGS})
-set( CMAKE_VERBOSE_MAKEFILE on )
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(DEBUG true)
