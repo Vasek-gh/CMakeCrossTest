@@ -67,8 +67,13 @@ if(MINGW)
     message(STATUS "MinGw")
 endif()
 
-
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} SRC_LIST)
+
+set(HEADERS
+    "${CMAKE_CURRENT_SOURCE_DIR}/ObjectStorage.h"
+    )
+
+
 add_custom_target(main DEPENDS ${APPLICATION_NAME})
 add_executable(${APPLICATION_NAME} ${SRC_LIST} ${HEADERS})
 
