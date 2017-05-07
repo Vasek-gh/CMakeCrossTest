@@ -22,7 +22,7 @@ void freeAlignedMemory(void* memory)
 
 void* getAlignedMemory(size_t size, size_t alignment)
 {
-    aligned_alloc(alignment, size);
+    return aligned_alloc(alignment, size);
 }
 
 void freeAlignedMemory(void* memory)
