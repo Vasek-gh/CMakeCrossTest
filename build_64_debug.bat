@@ -11,3 +11,5 @@ CD "%BUILD_PATH%"
 
 cmake "-GMinGW Makefiles" "-DCMAKE_BUILD_TYPE=Debug" %PROJECT_PATH%
 cmake --build . --target all
+
+"%BUILD_PATH%"\CMakeCrossTest.exe

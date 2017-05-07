@@ -3,14 +3,11 @@
 
 #include <new>
 #include <stdint.h>
-#include <stdlib.h>
 #include "Debug.h"
 #include "Exception.h"
+#include "Align.h"
 
-constexpr uintptr_t allign_value(uintptr_t base, uintptr_t allign)
-{
-    return (base % allign != 0) ? base + allign - base % allign : base;
-}
+
 
 //##########################################
 //
@@ -41,7 +38,7 @@ public:
         while (chunk) {
             auto prevChunk = chunk->prev();
             chunk->release();
-            free(chunk->entry());
+            freeAlignedMemory(chunk->entry());
             chunk = prevChunk;
         }
     }
@@ -117,7 +114,7 @@ private:
 
     void allocChunk(uint32_t size)
     {
-        void* chunkEntry = aligned_alloc(EL_ALIGN, EL_SIZE * size + CH_SIZE);
+        void* chunkEntry = getAlignedMemory(EL_SIZE * size + CH_SIZE, EL_ALIGN);
         if (!chunkEntry) {
             RAISE(BadAllocException, "aligned_alloc fail");
         }
