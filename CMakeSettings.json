@@ -1,0 +1,33 @@
+{
+  // See https://go.microsoft.com//fwlink//?linkid=834763 for more information about this file.
+  "configurations": [
+    {
+      "name": "Win32_Debug",
+      "generator": "Visual Studio 15 2017",      
+      "buildRoot": "${projectDir}\\Build\\${name}",
+      "cmakeCommandArgs": "-DCMAKE_BUILD_TYPE=Debug",
+      "buildCommandArgs": "-m -v:minimal"
+    },
+    {
+      "name": "Win32_Release",
+      "generator": "Visual Studio 15 2017",      
+      "buildRoot": "${projectDir}\\Build\\${name}",
+      "cmakeCommandArgs": "-DCMAKE_BUILD_TYPE=Release",
+      "buildCommandArgs": "-m -v:minimal"
+    },
+    {
+      "name": "Win64_Debug",
+      "generator": "Visual Studio 15 2017 Win64",      
+      "buildRoot": "${projectDir}\\Build\\${name}",
+      "cmakeCommandArgs": "-DCMAKE_BUILD_TYPE=Debug",
+      "buildCommandArgs": "-m -v:minimal"
+    },
+    {
+      "name": "Win64_Release",
+      "generator": "Visual Studio 15 2017 Win64",      
+      "buildRoot": "${projectDir}\\Build\\${name}",
+      "cmakeCommandArgs": "-DCMAKE_BUILD_TYPE=Release",
+      "buildCommandArgs": "-m -v:minimal"
+    }
+  ]
+}

@@ -5,7 +5,7 @@
 #include <stdint.h>
 
 void* getAlignedMemory(size_t size, size_t alignment);
-void* freeAlignedMemory(void* memory);
+void freeAlignedMemory(void* memory);
 
 constexpr uintptr_t allign_value(uintptr_t base, uintptr_t allign)
 {
