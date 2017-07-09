@@ -47,12 +47,12 @@ void testEnv()
         cout << "64" << endl;
 #endif
 
-#ifdef WINDOWS
+#ifdef OS_WINDOWS
         cout << "Windows" << endl;
 #endif
 
-#ifdef UNIX
-        cout << "Unix" << endl;
+#ifdef OS_LINUX
+        cout << "Linux" << endl;
 #endif
 
 #ifdef MINGW

@@ -1,6 +1,6 @@
 ﻿#include "Align.h"
 
-#ifdef WINDOWS
+#ifdef OS_WINDOWS
 
 #include <malloc.h>
 
@@ -16,7 +16,7 @@ void freeAlignedMemory(void* memory)
 
 #endif
 
-#ifdef UNIX
+#ifdef OS_LINUX
 
 #include <stdlib.h>
 

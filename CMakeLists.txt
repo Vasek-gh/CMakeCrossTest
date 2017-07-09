@@ -28,7 +28,6 @@ if(DEBUG)
 endif()
 
 if(RELEASE)
-
     message(STATUS "Mode - release")
 endif()
 
@@ -64,36 +63,36 @@ endif()
 #
 ################################################################################
 
-if(WIN32)
-    set(WINDOWS true)
-    add_definitions(-DWINDOWS)
+if (WIN32)
+    set(OS_WINDOWS true)
+    add_definitions(-DOS_WINDOWS)
 endif()
 
-if(UNIX)
+if (UNIX)
     if (CMAKE_SYSTEM_NAME MATCHES "Linux")
-        set(LINUX TRUE)
-        add_definitions(-DLINUX)
-        add_definitions(-DPOSIX)
+        set(OS_LINUX TRUE)
+        add_definitions(-DOS_LINUX)
+        add_definitions(-DOS_POSIX)
     endif()
 
     if(APPLE)
         if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
-            set(MACOSX TRUE)
-            add_definitions(-DMACOSX)
-            add_definitions(-DPOSIX)
+            set(OS_MACOSX TRUE)
+            add_definitions(-DOS_MACOSX)
+            add_definitions(-DOS_POSIX)
         endif()
     endif()
 endif()
 
-if (WINDOWS)
+if (OS_WINDOWS)
     message(STATUS "Windows")
 endif()
 
-if (LINUX)
+if (OS_LINUX)
     message(STATUS "Linux")
 endif()
 
-if (MACOSX)
+if (OS_MACOSX)
     message(STATUS "Mac OS X")
 endif()
 
@@ -125,11 +124,11 @@ endif()
 
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} SRC_LIST)
 
-if (WINDOWS)
+if (OS_WINDOWS)
     aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/Win SRC_LIST)
 endif()
 
-if (Posix)
+if (POSIX)
     aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/Posix SRC_LIST)
 endif()
 
