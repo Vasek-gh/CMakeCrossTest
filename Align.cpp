@@ -1,6 +1,6 @@
 ﻿#include "Align.h"
 
-#ifdef WIN
+#ifdef WINDOWS
 
 #include <malloc.h>
 

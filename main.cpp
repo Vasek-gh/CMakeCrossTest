@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include "Debug.h"
 #include "Exception.h"
+#include "ChunkAllocator.h"
 #include "TestStorage.h"
 
 using namespace std;
@@ -46,7 +47,7 @@ void testEnv()
         cout << "64" << endl;
 #endif
 
-#ifdef WIN
+#ifdef WINDOWS
         cout << "Windows" << endl;
 #endif
 
@@ -105,6 +106,30 @@ void testStorage()
     }
 }
 
+void testChunkAllocator()
+{
+    cout << "start testChunkAllocator" << endl;
+    try
+    {
+        int chunkSize = ChunkAllocator::getChunkSize();
+        void* chunk1 = ChunkAllocator::alloc();
+        if (reinterpret_cast<intptr_t>(chunk1) % chunkSize > 0) {
+            RAISE(BadAllocException, "Chunk address not aligned");
+        }
+
+        void* chunk2 = ChunkAllocator::alloc(2);
+        if (reinterpret_cast<intptr_t>(chunk2) % chunkSize > 0) {
+            RAISE(BadAllocException, "Chunk address not aligned");
+        }
+
+        ChunkAllocator::free(chunk1);
+        ChunkAllocator::free(chunk2);
+    }
+    catch (const Exception& e) {
+        std::cerr << e.what() << std::endl;
+    }
+}
+
 void signalHandler(int sig)
 {
     throw runtime_error("jh");
@@ -121,11 +146,14 @@ int main(int argc, char *argv[])
     setlocale(LC_ALL, "Russian");
     signal(SIGSEGV, signalHandler);
 
+    ChunkAllocator::init();
+
     cout << "start" << endl;
 
     testEnv();
     testAssert();
     testStorage();
+    testChunkAllocator();
 
     try
     {
