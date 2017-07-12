@@ -57,6 +57,23 @@ string Exception::makeFullMessage(CharStr EName, CharStr file, int line,
 
 //##########################################
 //
+// RuntimeException
+//
+//##########################################
+
+RuntimeException::RuntimeException(Exception::StdStr msg)
+    : Exception("ArgumentException", "", -1, msg)
+{
+}
+
+RuntimeException::RuntimeException(Exception::CharStr file, int line,
+                                   Exception::StdStr msg)
+    : Exception("ArgumentException", file, line, msg)
+{
+}
+
+//##########################################
+//
 // ArgumentException
 //
 //##########################################
@@ -70,7 +87,6 @@ ArgumentException::ArgumentException(Exception::CharStr file, int line,
                                      Exception::StdStr msg)
     : Exception("ArgumentException", file, line, msg)
 {
-
 }
 
 //##########################################
@@ -82,12 +98,10 @@ ArgumentException::ArgumentException(Exception::CharStr file, int line,
 BadAllocException::BadAllocException(Exception::StdStr msg)
     : Exception("BadAllocException", "", -1, msg)
 {
-
 }
 
 BadAllocException::BadAllocException(Exception::CharStr file, int line,
                                      Exception::StdStr msg)
     : Exception("BadAllocException", file, line, msg)
 {
-
 }

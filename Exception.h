@@ -32,6 +32,19 @@ private:
 
 //##############################################################################
 //
+// RuntimeException
+//
+//##############################################################################
+
+class RuntimeException : public Exception
+{
+public:
+    explicit RuntimeException(StdStr msg);
+    explicit RuntimeException(CharStr file, int line, StdStr msg);
+};
+
+//##############################################################################
+//
 // ArgumentException
 //
 //##############################################################################

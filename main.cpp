@@ -111,19 +111,34 @@ void testChunkAllocator()
     cout << "start testChunkAllocator" << endl;
     try
     {
-        int chunkSize = ChunkAllocator::getChunkSize();
-        void* chunk1 = ChunkAllocator::alloc();
-        if (reinterpret_cast<intptr_t>(chunk1) % chunkSize > 0) {
+        int pageSize = PageAllocator::getPageSize();
+
+
+        void* page1 = PageAllocator::alloc();
+        if (reinterpret_cast<intptr_t>(page1) % pageSize > 0) {
             RAISE(BadAllocException, "Chunk address not aligned");
         }
 
-        void* chunk2 = ChunkAllocator::alloc(2);
-        if (reinterpret_cast<intptr_t>(chunk2) % chunkSize > 0) {
+
+        void* page2 = PageAllocator::alloc(3);
+        if (reinterpret_cast<intptr_t>(page2) % pageSize > 0) {
             RAISE(BadAllocException, "Chunk address not aligned");
         }
 
-        ChunkAllocator::free(chunk1);
-        ChunkAllocator::free(chunk2);
+        void* page3 = (void*)((uintptr_t)page2 + pageSize);
+        if (reinterpret_cast<intptr_t>(page3) % pageSize > 0) {
+            RAISE(BadAllocException, "Chunk address not aligned");
+        }
+
+        void* page4 = (void*)((uintptr_t)page3 + pageSize);
+        if (reinterpret_cast<intptr_t>(page4) % pageSize > 0) {
+            RAISE(BadAllocException, "Chunk address not aligned");
+        }
+
+        PageAllocator::free(page4);
+        PageAllocator::free(page3);
+        PageAllocator::free(page2);
+        PageAllocator::free(page1);
     }
     catch (const Exception& e) {
         std::cerr << e.what() << std::endl;
@@ -146,7 +161,7 @@ int main(int argc, char *argv[])
     setlocale(LC_ALL, "Russian");
     signal(SIGSEGV, signalHandler);
 
-    ChunkAllocator::init();
+    PageAllocator::init(false);
 
     cout << "start" << endl;
 
