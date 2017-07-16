@@ -73,7 +73,7 @@ void TestSTLinearAllocator::run()
 {
     int count = 1000;
 
-    STLinearAllocator allocator(cleansable);
+    STLinearAllocator allocator( cleansable);
     for (int i = 0; i < count; i++) {
         auto t = new (&allocator) TestClass();
         t->setValue(i);
@@ -131,19 +131,23 @@ void TestSTLinearAllocator::speedTestThreads()
         thread th2(&threadRunLinear);
         thread th3(&threadRunLinear);
         thread th4(&threadRunLinear);
+#ifdef MINGW
         thread th5(&threadRunLinear);
         thread th6(&threadRunLinear);
         thread th7(&threadRunLinear);
         thread th8(&threadRunLinear);
+#endif
 
         th1.join();
         th2.join();
         th3.join();
         th4.join();
+#ifdef MINGW
         th5.join();
         th6.join();
         th7.join();
         th8.join();
+#endif
 
         Time endTime = high_resolution_clock::now();
         cout << "ellapsed: " << duration_cast<milliseconds>(endTime - startTime).count() << endl;
@@ -161,19 +165,23 @@ void TestSTLinearAllocator::speedTestThreads()
         thread th2(&threadRunMalloc);
         thread th3(&threadRunMalloc);
         thread th4(&threadRunMalloc);
+#ifdef MINGW
         thread th5(&threadRunMalloc);
         thread th6(&threadRunMalloc);
         thread th7(&threadRunMalloc);
         thread th8(&threadRunMalloc);
+#endif
 
         th1.join();
         th2.join();
         th3.join();
         th4.join();
+#ifdef MINGW
         th5.join();
         th6.join();
         th7.join();
         th8.join();
+#endif
 
         Time endTime = high_resolution_clock::now();
         cout << "ellapsed: " << duration_cast<milliseconds>(endTime - startTime).count() << endl;
@@ -183,5 +191,4 @@ void TestSTLinearAllocator::speedTestThreads()
         cin >> i;
 #endif
     }
-
 }

@@ -138,9 +138,9 @@ int main(int argc, char *argv[])
 {
     setlocale(LC_ALL, "Russian");
 
-    wstring ggg = L"ЫЫЫЫ";
+    //wstring ggg = L"ЫЫЫЫ";
 
-    wcout << ggg << endl;
+    //wcout << ggg << endl;
 
     signal(SIGSEGV, signalHandler);
 

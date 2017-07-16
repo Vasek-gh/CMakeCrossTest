@@ -4,7 +4,9 @@
 #include "Memory.h"
 #include "Exception.h"
 
+#include <cstring>
 #include <stdint.h>
+
 
 namespace RegionAllocatorInternal {
 

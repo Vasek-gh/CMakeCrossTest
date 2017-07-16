@@ -25,9 +25,9 @@ constexpr uintptr_t alignValue(uintptr_t base, uintptr_t allign)
 
 constexpr void* alignValue(void* base, uintptr_t align)
 {
-    uintptr_t value = reinterpret_cast<uintptr_t>(base);
-    uintptr_t result = alignValue(value, align);
-    return reinterpret_cast<void*>(result);
+    //uintptr_t value = reinterpret_cast<uintptr_t>(base);
+    //uintptr_t result = alignValue(reinterpret_cast<uintptr_t>(base), align);
+    return reinterpret_cast<void*>(alignValue(reinterpret_cast<uintptr_t>(base), align));
 }
 
 

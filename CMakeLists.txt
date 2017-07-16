@@ -122,7 +122,11 @@ if(MSVC)
     set(CMAKE_CXX_FLAGS "/EHsc")
 endif()
 
-
+if(CMAKE_COMPILER_IS_GNUCXX)
+    add_definitions(-DGCC)
+    message(STATUS "GCC")
+    set(CMAKE_CXX_FLAGS "-fnon-call-exceptions -fexceptions -pthread")
+endif()
 
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} SRC_LIST)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/Test SRC_LIST)
