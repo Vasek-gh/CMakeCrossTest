@@ -125,6 +125,7 @@ endif()
 
 
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} SRC_LIST)
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/Test SRC_LIST)
 
 if (OS_WINDOWS)
     aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/Win SRC_LIST)
@@ -136,7 +137,7 @@ endif()
 
 
 set(HEADERS
-    "${CMAKE_CURRENT_SOURCE_DIR}/ChunkAllocator.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Memory.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/ObjectStorage.h"
     )
 

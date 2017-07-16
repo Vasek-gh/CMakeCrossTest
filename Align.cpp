@@ -31,3 +31,13 @@ void freeAlignedMemory(void* memory)
 }
 
 #endif
+
+bool checkAlign(void* value, uintptr_t align)
+{
+    return reinterpret_cast<uintptr_t>(value) % align == 0;
+}
+
+bool checkAlign(uintptr_t value, uintptr_t align)
+{
+    return value % align == 0;
+}

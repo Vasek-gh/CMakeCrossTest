@@ -1,10 +1,13 @@
 ﻿#include <iostream>
 #include <signal.h>
 #include <stdexcept>
+#include <chrono>
 #include "Debug.h"
+#include "Memory.h"
 #include "Exception.h"
-#include "ChunkAllocator.h"
+
 #include "TestStorage.h"
+#include "Test/TestSTLinearAllocator.h"
 
 using namespace std;
 
@@ -106,39 +109,14 @@ void testStorage()
     }
 }
 
-void testChunkAllocator()
+void testSTLinearAllocator()
 {
-    cout << "start testChunkAllocator" << endl;
+    cout << "start testSTLinearAllocator" << endl;
+
     try
     {
-        int pageSize = PageAllocator::getPageSize();
-
-
-        void* page1 = PageAllocator::alloc();
-        if (reinterpret_cast<intptr_t>(page1) % pageSize > 0) {
-            RAISE(BadAllocException, "Chunk address not aligned");
-        }
-
-
-        void* page2 = PageAllocator::alloc(3);
-        if (reinterpret_cast<intptr_t>(page2) % pageSize > 0) {
-            RAISE(BadAllocException, "Chunk address not aligned");
-        }
-
-        void* page3 = (void*)((uintptr_t)page2 + pageSize);
-        if (reinterpret_cast<intptr_t>(page3) % pageSize > 0) {
-            RAISE(BadAllocException, "Chunk address not aligned");
-        }
-
-        void* page4 = (void*)((uintptr_t)page3 + pageSize);
-        if (reinterpret_cast<intptr_t>(page4) % pageSize > 0) {
-            RAISE(BadAllocException, "Chunk address not aligned");
-        }
-
-        PageAllocator::free(page4);
-        PageAllocator::free(page3);
-        PageAllocator::free(page2);
-        PageAllocator::free(page1);
+        TestSTLinearAllocator test;
+        test.run();
     }
     catch (const Exception& e) {
         std::cerr << e.what() << std::endl;
@@ -147,7 +125,7 @@ void testChunkAllocator()
 
 void signalHandler(int sig)
 {
-    throw runtime_error("jh");
+    throw runtime_error("signalHandler");
 }
 
 void test()
@@ -159,16 +137,21 @@ void test()
 int main(int argc, char *argv[])
 {
     setlocale(LC_ALL, "Russian");
+
+    wstring ggg = L"ЫЫЫЫ";
+
+    wcout << ggg << endl;
+
     signal(SIGSEGV, signalHandler);
 
-    PageAllocator::init(false);
-
     cout << "start" << endl;
+
+    Memory::init();
 
     testEnv();
     testAssert();
     testStorage();
-    testChunkAllocator();
+    testSTLinearAllocator();
 
     try
     {

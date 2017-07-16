@@ -106,7 +106,7 @@ private:
     // выравнивание для элемента
     const static int EL_ALIGN = alignof(T);
     // размер занимаемый одним элементом
-    const static int EL_SIZE = allign_value(TP_SIZE, EL_ALIGN);
+    const static int EL_SIZE = alignValue(TP_SIZE, EL_ALIGN);
     // минимальное кол-во элементов для выделения чанка
     const static int MIN_CAPACITY = 10;
     // кол-во элементов для выделения чанка по умолчанию
