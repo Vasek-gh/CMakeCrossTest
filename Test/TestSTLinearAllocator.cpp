@@ -42,23 +42,23 @@ private:
     int _value;
 };
 
-static int count = 1000000;
-static int size = 16;
+static int _count = 1000000;
+static int _size = 16;
 static bool cleansable = false;
 
 void threadRunLinear() {
 
     STLinearAllocator allocator(cleansable);
-    for (int i = 0; i < count; i++) {
-        uint64_t* value = reinterpret_cast<uint64_t*>(allocator.alloc(size));
+    for (int i = 0; i < _count; i++) {
+        uint64_t* value = reinterpret_cast<uint64_t*>(allocator.alloc(_size));
         *value = 10;
     }
 }
 
 void threadRunMalloc() {
 
-    for (int i = 0; i < count; i++) {
-        uint64_t* value = reinterpret_cast<uint64_t*>(malloc(size));
+    for (int i = 0; i < _count; i++) {
+        uint64_t* value = reinterpret_cast<uint64_t*>(malloc(_size));
         *value = 10;
     }
 }
@@ -71,10 +71,10 @@ TestSTLinearAllocator::TestSTLinearAllocator()
 
 void TestSTLinearAllocator::run()
 {
-    int count = 1000;
+    int _count = 1000;
 
     STLinearAllocator allocator( cleansable);
-    for (int i = 0; i < count; i++) {
+    for (int i = 0; i < _count; i++) {
         auto t = new (&allocator) TestClass();
         t->setValue(i);
     }
@@ -90,8 +90,8 @@ void TestSTLinearAllocator::speedTest()
 
         STLinearAllocator allocator(cleansable);
 
-        for (int i = 0; i < count; i++) {
-            uint64_t* value = reinterpret_cast<uint64_t*>(allocator.alloc(size));
+        for (int i = 0; i < _count; i++) {
+            uint64_t* value = reinterpret_cast<uint64_t*>(allocator.alloc(_size));
             *value = 10;
         }
 
@@ -107,8 +107,8 @@ void TestSTLinearAllocator::speedTest()
     {
         Time startTime = high_resolution_clock::now();
 
-        for (int i = 0; i < count; i++) {
-            uint64_t* value = reinterpret_cast<uint64_t*>(malloc(size));
+        for (int i = 0; i < _count; i++) {
+            uint64_t* value = reinterpret_cast<uint64_t*>(malloc(_size));
             *value = 10;
         }
 

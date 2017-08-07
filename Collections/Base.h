@@ -3,6 +3,7 @@
 
 #include <utility>
 #include <stdint.h>
+#include <algorithm>
 #include <type_traits>
 
 #include "Consts.h"
