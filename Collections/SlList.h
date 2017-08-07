@@ -23,8 +23,8 @@ class BaseSingleLinkedList
 {
 public:
     using NodeType = SlNode<T>;
-    using NodeAllocator = NodeAllocator<NodeType, Allocator>;
-    using ItemHelper = ItemHelper<T, NodeType>;
+    using NodeAllocatorType = NodeAllocator<NodeType, Allocator>;
+    using ItemHelperType = ItemHelper<T, NodeType>;
 public:
     using IterType = SlIter<T>;
     using ItemType = Item<T, NodeType>;
@@ -36,8 +36,8 @@ public:
 
     void remove(ItemType& item)
     {
-        removeNode(ItemHelper::getNode(item));
-        ItemHelper::release(item);
+        removeNode(ItemHelperType::getNode(item));
+        ItemHelperType::release(item);
     }
 
     void clear()
@@ -82,38 +82,38 @@ protected:
     ItemType doAddFirst(Args&&... args)
     {
         auto node = insertNode(&_head, std::forward<Args>(args)...);
-        return ItemHelper::make(node);
+        return ItemHelperType::make(node);
     }
 
     template<typename ...Args>
     ItemType doAddLast(Args&&... args)
     {
         auto node = insertNode(_last, std::forward<Args>(args)...);
-        return ItemHelper::make(node);
+        return ItemHelperType::make(node);
     }
 
     template<typename ...Args>
     ItemType doInsertBefore(ItemType& next, Args&&... args)
     {
-        auto nextNode = ItemHelper::getNode(next);
+        auto nextNode = ItemHelperType::getNode(next);
         auto node = insertNode(getPrev(nextNode), std::forward<Args>(args)...);
-        return ItemHelper::make(node);
+        return ItemHelperType::make(node);
     }
 
     template<typename ...Args>
     ItemType doInsertAfter(ItemType& prev, Args&&... args)
     {
-        auto prevNode = ItemHelper::getNode(prev);
+        auto prevNode = ItemHelperType::getNode(prev);
         getPrev(prevNode);
         auto node = insertNode(prevNode, std::forward<Args>(args)...);
-        return ItemHelper::make(node);
+        return ItemHelperType::make(node);
     }
 
 private:
     size_t _count;
     NodeType _head;
     NodeType* _last;
-    NodeAllocator _nodeAllocator;
+    NodeAllocatorType _nodeAllocator;
 
     void initData()
     {

@@ -20,8 +20,8 @@ template<class T, class Allocator>
 class BaseQueue
 {
     using NodeType = SlNode<T>;
-    using ItemHelper = ItemHelper<T, NodeType>;
-    using NodeAllocator = NodeAllocator<NodeType, Allocator>;
+    using NodeAllocatorType = NodeAllocator<NodeType, Allocator>;
+    using ItemHelperType = ItemHelper<T, NodeType>;
 public:
     using IterType = SlIter<T>;
     using ItemType = Item<T, NodeType>;
@@ -39,7 +39,7 @@ public:
     ItemType peek()
     {
         if (_head.next) {
-            return ItemHelper::make(_head.next);
+            return ItemHelperType::make(_head.next);
         }
 
         RAISE(RuntimeException, Errors::EmptyContainer);
@@ -104,7 +104,7 @@ protected:
         _tail = node;
         _count++;
 
-        return ItemHelper::make(node);
+        return ItemHelperType::make(node);
     }
 
     void doDequeue()
@@ -121,7 +121,7 @@ private:
     size_t _count;
     NodeType _head;
     NodeType* _tail;
-    NodeAllocator _nodeAllocator;
+    NodeAllocatorType _nodeAllocator;
 };
 
 } // Internal end
