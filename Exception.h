@@ -17,7 +17,9 @@ protected:
     using CharStr = const char*;
 public:
     explicit Exception(StdStr msg);
+    explicit Exception(CharStr msg);
     explicit Exception(CharStr file, int line, StdStr msg);
+    explicit Exception(CharStr file, int line, CharStr msg);
     virtual ~Exception();
 
     virtual const char* what() const throw() override;
@@ -25,6 +27,7 @@ protected:
     explicit Exception(CharStr EName, CharStr file, int line, StdStr msg);
 private:
     std::string makeFullMessage(CharStr EName, CharStr file, int line, StdStr msg);
+    std::string makeFullMessage(CharStr EName, CharStr file, int line, CharStr msg);
 
     // full message of exception
     const std::string _msg;
@@ -54,6 +57,21 @@ class ArgumentException : public Exception
 public:
     explicit ArgumentException(StdStr msg);
     explicit ArgumentException(CharStr file, int line, StdStr msg);
+protected:
+    using Exception::Exception;
+};
+
+//##############################################################################
+//
+// ArgumentNullException
+//
+//##############################################################################
+
+class ArgumentNullException : public ArgumentException
+{
+public:
+    explicit ArgumentNullException(StdStr msg);
+    explicit ArgumentNullException(CharStr file, int line, StdStr msg);
 };
 
 //##############################################################################
@@ -71,6 +89,19 @@ public:
 
 //##############################################################################
 //
+// NullPointerException
+//
+//##############################################################################
+
+class NullPointerException : public Exception
+{
+public:
+    explicit NullPointerException(StdStr msg);
+    explicit NullPointerException(CharStr file, int line, StdStr msg);
+};
+
+//##############################################################################
+//
 // RAISE
 //
 //##############################################################################
@@ -83,6 +114,36 @@ void raiseT(Args&&... args)
 
 #define RAISE(E, ...) \
     raiseT<E>(__FILE__, __LINE__, __VA_ARGS__)
+
+//##############################################################################
+//
+// Utils
+//
+//##############################################################################
+
+#define CHECK_NULL_PTR(ptr) \
+    if (!(ptr)) { \
+        Exceptions::Internal::raiseNullPointerException( \
+            __FILE__, __LINE__, #ptr \
+        ); \
+    } \
+
+#define CHECK_NULL_ARG(arg) \
+    if (!(arg)) { \
+        Exceptions::Internal::raiseArgumentNullException( \
+            __FILE__, __LINE__, #arg \
+        ); \
+    } \
+
+
+namespace Exceptions {
+    namespace Internal {
+        using CharStr = const char*;
+
+        void raiseNullPointerException(CharStr f, int l, CharStr name);
+        void raiseArgumentNullException(CharStr f, int l, CharStr name);
+    }
+}
 
 
 #endif // EXCEPTION_H

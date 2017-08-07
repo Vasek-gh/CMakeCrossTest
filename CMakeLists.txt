@@ -142,6 +142,12 @@ endif()
 
 set(HEADERS
     "${CMAKE_CURRENT_SOURCE_DIR}/Memory.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Collections/Base.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Collections/Consts.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Collections/DlList.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Collections/Queue.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Collections/SlList.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Collections/Stack.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/ObjectStorage.h"
     )
 
