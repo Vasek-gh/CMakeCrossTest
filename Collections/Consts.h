@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-namespace GreedyCollections {
+namespace GreedyContainers {
 namespace Internal {
 
     // минимальный размер пачки
@@ -11,11 +11,23 @@ namespace Internal {
     // максимальный размер пачки
     const static size_t MAX_CHUNK_SIZE = 50;
 
+    // размер предварительной пачки
+    const static size_t DEF_CAPACITY = 3;
+    // размер пачки по умолчанию
+    const static size_t DEF_CHUNK_SIZE = 5;
+
+
     namespace Errors {
-        const char* UnknownNode =
+        static const char* UnknownNode =
                 "Node not exist in list";
-        const char* EmptyContainer =
+        static const char* EmptyContainer =
                 "Container is empty";
+        static const char* FullContainer =
+                "Container is full";
+        static const char* MovedContainer =
+                "Container is moved";
+        static const char* IndexOutOfRange =
+                "Index out of range";
     }
 }
 }

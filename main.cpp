@@ -11,6 +11,8 @@
 #include "Collections/DlList.h"
 #include "Collections/Queue.h"
 #include "Collections/Stack.h"
+#include "Collections/Holder.h"
+#include "Collections/Array.h"
 
 #include "TestStorage.h"
 #include "Test/TestSTLinearAllocator.h"
@@ -221,7 +223,7 @@ int main(int argc, char *argv[])
         SimpleAllocator allocator;
 
         {
-            using SlObjList = GreedyCollections::SlObjList<Test, SimpleAllocator>;
+            using SlObjList = GreedyContainers::SlObjList<Test, SimpleAllocator>;
             SlObjList l(allocator, 0, 3);
             SlObjList::Item i1 = l.addFirst(1);
             SlObjList::Item i2 = l.addLast(2);
@@ -249,7 +251,7 @@ int main(int argc, char *argv[])
         cout << endl;
 
         {
-            using SlPtrList = GreedyCollections::SlPtrList<Test, SimpleAllocator>;
+            using SlPtrList = GreedyContainers::SlPtrList<Test, SimpleAllocator>;
             SlPtrList l(allocator, 0, 3);
 
             Test t1(1);
@@ -283,7 +285,7 @@ int main(int argc, char *argv[])
         cout << endl;
 
         {
-            using DlObjList = GreedyCollections::DlObjList<Test, SimpleAllocator>;
+            using DlObjList = GreedyContainers::DlObjList<Test, SimpleAllocator>;
             DlObjList l(allocator, 0, 3);
             DlObjList::Item i1 = l.addFirst(1);
             DlObjList::Item i2 = l.addLast(2);
@@ -311,7 +313,7 @@ int main(int argc, char *argv[])
         cout << endl;
 
         {
-            using DlPtrList = GreedyCollections::DlPtrList<Test, SimpleAllocator>;
+            using DlPtrList = GreedyContainers::DlPtrList<Test, SimpleAllocator>;
             DlPtrList l(allocator, 0, 3);
 
             Test t1(1);
@@ -345,111 +347,150 @@ int main(int argc, char *argv[])
         cout << endl;
 
         {
-            using ObjStack = GreedyCollections::ObjStack<Test, SimpleAllocator>;
-            ObjStack l(allocator, 0, 3);
+            using ObjStack = GreedyContainers::ObjStack<Test, SimpleAllocator, 2>;
+            ObjStack l(allocator, 3);
 
-            ObjStack::Item i1 = l.push(1);
-            ObjStack::Item i2 = l.push(2);
-            ObjStack::Item i3 = l.push(3);
-            ObjStack::Item i4 = l.push(4);
-            int h = i1->a;
+            l.push(1);
+            l.push(2);
+            l.push(3);
+            l.push(4);
+            l.push(5);
+
+            auto a1 = l.peek();
             l.pop();
-
-            for (auto value : l) {
-                cout << value->a << endl;
-            }
-
-            ObjStack l2 = move(l);
-
-            for (auto value : l) {
-                cout << value->a << endl;
-            }
-
-            for (auto value : l2) {
-                cout << value->a << endl;
-            }
+            auto a2 = l.peek();
+            l.pop();
+            auto a3 = l.peek();
+            l.pop();
+            auto a4 = l.peek();
+            l.pop();
         }
 
         cout << endl;
 
         {
-            using PtrStack = GreedyCollections::PtrStack<Test, SimpleAllocator>;
-            PtrStack l(allocator, 0, 3);
+            using PtrStack = GreedyContainers::PtrStack<Test, SimpleAllocator, 2>;
+            PtrStack l(allocator, 3);
 
             Test t1(1);
             Test t2(2);
             Test t3(3);
             Test t4(4);
 
-            PtrStack::Item i1 = l.push(&t1);
-            PtrStack::Item i2 = l.push(&t2);
-            PtrStack::Item i3 = l.push(&t3);
-            PtrStack::Item i4 = l.push(&t4);
-            int h = i1->a;
+            l.push(&t1);
+            l.push(&t2);
+            l.push(&t3);
+            l.push(&t4);
             l.pop();
-
-            for (auto value : l) {
-                cout << value->a << endl;
-            }
-
-            PtrStack l2 = move(l);
-
-            for (auto value : l) {
-                cout << value->a << endl;
-            }
-
-            for (auto value : l2) {
-                cout << value->a << endl;
-            }
         }
 
         cout << endl;
 
         {
-            using ObjQueue = GreedyCollections::ObjQueue<Test, SimpleAllocator>;
-            ObjQueue l(allocator, 0, 3);
+            using ObjQueue = GreedyContainers::ObjQueue<Test, SimpleAllocator, 2>;
+            ObjQueue l(allocator, 3);
 
             auto r = l.enqueue(1);
             l.enqueue(2);
             l.enqueue(3);
             l.enqueue(4);
-            int h = r->a;
+            l.enqueue(5);
             l.dequeue();
-
-            for (auto value : l) {
-                cout << value->a << endl;
-            }
-
-            ObjQueue l2 = move(l);
-
-            for (auto value : l) {
-                cout << value->a << endl;
-            }
-
-            for (auto value : l2) {
-                cout << value->a << endl;
-            }
+            l.dequeue();
+            l.dequeue();
+            l.dequeue();
+            l.dequeue();
+            l.enqueue(6);
         }
 
         cout << endl;
 
         {
-            using PtrQueue = GreedyCollections::PtrQueue<Test, SimpleAllocator>;
-            PtrQueue l(allocator, 0, 3);
+            using PtrQueue = GreedyContainers::PtrQueue<Test, SimpleAllocator, 2>;
+            PtrQueue l(allocator, 3);
 
             Test t1(1);
             Test t2(2);
             Test t3(3);
             Test t4(4);
 
-            PtrQueue::Item i1 = l.enqueue(&t1);
-            PtrQueue::Item i2 = l.enqueue(&t2);
-            PtrQueue::Item i3 = l.enqueue(&t3);
-            PtrQueue::Item i4 = l.enqueue(&t4);
-            int h = i1->a;
+            l.enqueue(&t1);
+            l.enqueue(&t2);
+            l.enqueue(&t3);
+            l.enqueue(&t4);
             l.dequeue();
 
-            for (auto value : l) {
+        }
+
+        cout << endl;
+
+        {
+            using Array = GreedyContainers::Array<Test>;
+            using ArrayBuilder = GreedyContainers::ArrayBuilder<Test, SimpleAllocator>;
+
+            using ObjHolder = GreedyContainers::ObjHolder<Test, SimpleAllocator, 2>;
+            ObjHolder l(allocator, 3);
+
+            auto r = l.add(1);
+            l.add(2);
+            l.add(3);
+
+            ArrayBuilder builder(allocator, l.count());
+            auto e1 = l.getEnumerator();
+            while (e1.moveNext()) {
+                builder.add(e1.current());
+                cout << e1.current()->a << endl;
+            }
+
+            auto arr = l.toArray();
+            for (auto value : arr) {
+                cout << value->a << endl;
+            }
+
+            l.clear();
+
+            auto arr2 = l.toArray();
+            for (auto value : arr2) {
+                cout << value->a << endl;
+            }
+
+            auto e2 = l.getEnumerator();
+            while (e2.moveNext()) {
+                cout << e2.current()->a << endl;
+            }
+        }
+
+        cout << endl;
+
+        {
+            using PtrHolder = GreedyContainers::PtrHolder<Test, SimpleAllocator, 2>;
+            PtrHolder l(allocator, 3);
+
+            Test t1(1);
+            Test t2(2);
+            Test t3(3);
+            Test t4(4);
+
+            l.add(&t1);
+            l.add(&t2);
+            l.add(&t3);
+            l.add(&t4);
+
+            auto e1 = l.getEnumerator();
+            while (e1.moveNext()) {
+                cout << e1.current()->a << endl;
+            }
+
+
+            l.clear();
+
+            auto e2 = l.getEnumerator();
+            while (e2.moveNext()) {
+                cout << e2.current()->a << endl;
+            }
+
+
+            /*for (auto value : l) {
                 cout << value->a << endl;
             }
 
@@ -461,10 +502,8 @@ int main(int argc, char *argv[])
 
             for (auto value : l2) {
                 cout << value->a << endl;
-            }
+            }*/
         }
-
-        cout << endl;
 
         //test();
     }

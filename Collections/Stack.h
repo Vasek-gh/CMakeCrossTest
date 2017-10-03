@@ -1,121 +1,92 @@
 ﻿#ifndef STACK_H
 #define STACK_H
 
-#include <stdint.h>
+#include "Chunks.h"
 
-#include "Base.h"
-#include "Consts.h"
-#include "../Exception.h"
-
-namespace GreedyCollections {
+namespace GreedyContainers {
 namespace Internal {
 
 //##############################################################################
 //
-// BaseStack
+// ChunkedStack
 //
 //##############################################################################
 
-template<class T, class Allocator>
-class BaseStack
+template<class T, class Alloc, size_t ChunckSize>
+class ChunkedStack : public ChunkedContainer<T, Alloc, ChunckSize>
 {
-    using NodeType = SlNode<T>;
-    using NodeAllocatorType = NodeAllocator<NodeType, Allocator>;
-    using ItemHelperType = ItemHelper<T, NodeType>;
+    using Parent = Internal::ChunkedContainer<T, Alloc, ChunckSize>;
+    using TPtr = typename Parent::TPtr;
+    using TChunk = typename Parent::TChunk;
+    using TArray = typename Parent::TArray;
 public:
-    using IterType = SlIter<T>;
-    using ItemType = Item<T, NodeType>;
+    using Enumerator = typename Parent::TEnum;
 
-    ~BaseStack()
+    ChunkedStack(Alloc& alloc, size_t capacity)
+        : Parent(alloc, capacity)
     {
-        auto current = _top;
-        while (current) {
-            auto next = current->next;
-            _nodeAllocator.release(current);
-            current = next;
-        }
     }
 
-    ItemType peek()
+    ~ChunkedStack()
     {
-        if (_top == nullptr) {
-            return ItemHelperType::make(_top);
-        }
+        this->releaseAllObjects(0);
+    }
 
-        RAISE(RuntimeException, Errors::EmptyContainer);
+    TPtr peek()
+    {
+        this->emptyCheck();
+        return this->_tail->getItem(getTailIndex());
     }
 
     void pop()
     {
-        doPop();
+        this->emptyCheck();
+
+        auto index = getTailIndex();
+        this->releaseItem(this->_tail, index);
+        this->_count--;
+
+        if (index == 0 && this->_tail != this->_head) {
+            auto prev = getTailPrev();
+            prev->next = nullptr;
+            this->_pool.release(this->_tail, false);
+            this->_tail = prev;
+        }
     }
 
     void clear()
     {
-        while (_top) {
-            doPop();
-        }
+        this->clearAllItems(0);
     }
 
-    size_t count()
+    Enumerator getEnumerator()
     {
-        return _count;
+        return this->getEnum(0);
     }
 
-    IterType begin()
+    TArray toArray()
     {
-        return _top;
+        return this->getArray(0);
     }
-
-    IterType end()
-    {
-        return nullptr;
-    }
-
-protected:
-    BaseStack(Allocator& allocator, size_t chunkSize, size_t capacity)
-        : _nodeAllocator(allocator, chunkSize, capacity)
-    {
-        _top = nullptr;
-        _count = 0;
-    }
-
-    BaseStack(BaseStack&& src)
-        : _nodeAllocator(std::move(src._nodeAllocator))
-    {
-        _top = src._top;
-        _count = src._count;
-
-        src._top = nullptr;
-        src._count = 0;
-    }
-
-    template<typename ...Args>
-    ItemType doPush(Args&&... args)
-    {
-        auto node = _nodeAllocator.create(std::forward<Args>(args)...);
-
-        node->next = _top;
-        _top = node;
-        _count++;
-
-        return ItemHelperType::make(node);
-    }
-
-    void doPop()
-    {
-        if (_top) {
-            auto next = _top->next;
-            _nodeAllocator.release(_top);
-            _top = next;
-            _count--;
-        }
-    }
-
 private:
-    size_t _count;
-    NodeType* _top;
-    NodeAllocatorType _nodeAllocator;
+    int getTailIndex()
+    {
+        return (this->_count - 1) % ChunckSize;
+    }
+
+    TChunk* getTailPrev()
+    {
+        if (this->_tail == this->_head) {
+            return this->_head;
+        }
+
+        auto current = this->_head;
+        while (current->next != this->_tail) {
+            current = current->next;
+        }
+
+        return current;
+    }
 };
 
 } // Internal end
@@ -126,28 +97,22 @@ private:
 //
 //##############################################################################
 
-template<class T, class Allocator>
-class ObjStack final : public Internal::BaseStack<T, Allocator>
+template<class T, class Alloc, size_t ChunckSize = Internal::DEF_CHUNK_SIZE>
+class ObjStack final : public Internal::ChunkedStack<T, Alloc, ChunckSize>
 {
-    using Parent = Internal::BaseStack<T, Allocator>;
+    using Parent = Internal::ChunkedStack<T, Alloc, ChunckSize>;
 
     static_assert(
         std::is_class<T>::value,
         "Type parameter T must be a class type"
     );
-
 public:
-    using Item = typename Parent::ItemType;
-    using Iter = typename Parent::IterType;
-
-    ObjStack(Allocator& allocator, size_t chunkSize, size_t capacity)
-        : Parent(allocator, chunkSize, capacity)
-    {}
+    using Parent::Parent;
 
     template<typename ...Args>
-    Item push(Args&&... args)
+    T* push(Args&&... args)
     {
-        return this->doPush(std::forward<Args>(args)...);
+        return this->appendItem(std::forward<Args>(args)...);
     }
 };
 
@@ -157,27 +122,21 @@ public:
 //
 //##############################################################################
 
-template<class T, class Allocator>
-class PtrStack final : public Internal::BaseStack<T*, Allocator>
+template<class T, class Alloc, size_t ChunckSize = Internal::DEF_CHUNK_SIZE>
+class PtrStack final : public Internal::ChunkedStack<T*, Alloc, ChunckSize>
 {
-    using Parent = Internal::BaseStack<T*, Allocator>;
+    using Parent = Internal::ChunkedStack<T*, Alloc, ChunckSize>;
 
     static_assert(
         std::is_class<T>::value,
         "Type parameter T must be a class type"
     );
-
 public:
-    using Item = typename Parent::ItemType;
-    using Iter = typename Parent::IterType;
+    using Parent::Parent;
 
-    PtrStack(Allocator& allocator, size_t chunkSize, size_t capacity)
-        : Parent(allocator, chunkSize, capacity)
-    {}
-
-    Item push(T* value)
+    void push(T* value)
     {
-        return this->doPush(value);
+        this->appendItem(value);
     }
 };
 

@@ -9,7 +9,7 @@
 #include "Base.h"
 #include "Consts.h"
 
-namespace GreedyCollections {
+namespace GreedyContainers {
 namespace Internal {
 
 //##############################################################################

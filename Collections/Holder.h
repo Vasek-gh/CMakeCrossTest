@@ -1,5 +1,5 @@
-﻿#ifndef QUEUE_H
-#define QUEUE_H
+﻿#ifndef HOLDER_H
+#define HOLDER_H
 
 #include "Chunks.h"
 
@@ -8,72 +8,58 @@ namespace Internal {
 
 //##############################################################################
 //
-// ChunkedQueue
+// ChunkedStack
 //
 //##############################################################################
 
 template<class T, class Alloc, size_t ChunckSize>
-class ChunkedQueue : public ChunkedContainer<T, Alloc, ChunckSize>
+class ChunkedHolder : public ChunkedContainer<T, Alloc, ChunckSize>
 {
     using Parent = Internal::ChunkedContainer<T, Alloc, ChunckSize>;
     using TPtr = typename Parent::TPtr;
+    using TChunk = typename Parent::TChunk;
+    using TArray = typename Parent::TArray;
 public:
-    ChunkedQueue(Alloc& alloc, size_t capacity)
+    using Enumerator = typename Parent::TEnum;
+
+    ChunkedHolder(Alloc& alloc, size_t capacity)
         : Parent(alloc, capacity)
     {
-        _headIndex = 0;
     }
 
-    ~ChunkedQueue()
+    ~ChunkedHolder()
     {
-        this->releaseAllObjects(_headIndex);
-    }
-
-    TPtr peek()
-    {
-        this->emptyCheck();
-        return this->_head->getItem(_headIndex);
-    }
-
-    void dequeue()
-    {
-        this->emptyCheck();
-
-        this->releaseItem(this->_head, _headIndex);
-        this-> _count--;
-        _headIndex++;
-
-        if (_headIndex == ChunckSize || this->_count == 0) {
-            _headIndex = 0;
-
-            if (this->_head != this->_tail) {
-                auto next = this->_head->next;
-                this->_pool.release(this->_head, false);
-                this->_head = next;
-            }
-        }
+        this->releaseAllObjects(0);
     }
 
     void clear()
     {
-        this->clearAllItems(_headIndex);
+        this->clearAllItems(0);
     }
-private:
-    int _headIndex;
+
+    Enumerator getEnumerator()
+    {
+        return this->getEnum(0);
+    }
+
+    TArray toArray()
+    {
+        return this->getArray(0);
+    }
 };
 
 } // Internal end
 
 //##############################################################################
 //
-// ObjQueue
+// ObjHolder
 //
 //##############################################################################
 
 template<class T, class Alloc, size_t ChunckSize = Internal::DEF_CHUNK_SIZE>
-class ObjQueue final : public Internal::ChunkedQueue<T, Alloc, ChunckSize>
+class ObjHolder final : public Internal::ChunkedHolder<T, Alloc, ChunckSize>
 {
-    using Parent = Internal::ChunkedQueue<T, Alloc, ChunckSize>;
+    using Parent = Internal::ChunkedHolder<T, Alloc, ChunckSize>;
 
     static_assert(
         std::is_class<T>::value,
@@ -83,7 +69,7 @@ public:
     using Parent::Parent;
 
     template<typename ...Args>
-    T* enqueue(Args&&... args)
+    T* add(Args&&... args)
     {
         return this->appendItem(std::forward<Args>(args)...);
     }
@@ -91,14 +77,14 @@ public:
 
 //##############################################################################
 //
-// PtrQueue
+// PtrHolder
 //
 //##############################################################################
 
 template<class T, class Alloc, size_t ChunckSize = Internal::DEF_CHUNK_SIZE>
-class PtrQueue final : public Internal::ChunkedQueue<T*, Alloc, ChunckSize>
+class PtrHolder final : public Internal::ChunkedHolder<T*, Alloc, ChunckSize>
 {
-    using Parent = Internal::ChunkedQueue<T*, Alloc, ChunckSize>;
+    using Parent = Internal::ChunkedHolder<T*, Alloc, ChunckSize>;
 
     static_assert(
         std::is_class<T>::value,
@@ -107,7 +93,7 @@ class PtrQueue final : public Internal::ChunkedQueue<T*, Alloc, ChunckSize>
 public:
     using Parent::Parent;
 
-    void enqueue(T* value)
+    void add(T* value)
     {
         this->appendItem(value);
     }
@@ -115,4 +101,4 @@ public:
 
 }
 
-#endif // QUEUE_H
+#endif // HOLDER_H

@@ -19,6 +19,11 @@ public:
         return static_cast<uint8_t*>(value) + size;
     }
 
+    template <class T>
+    static T* ptrInc(void* value, size_t size) {
+        return reinterpret_cast<T*>(ptrInc(value, size));
+    }
+
     static uintptr_t ptrIntInc(void* value, size_t size) {
         uintptr_t tmpValue = reinterpret_cast<uintptr_t>(value);
         return tmpValue + size;

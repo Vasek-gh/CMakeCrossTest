@@ -11,7 +11,7 @@
 #include "../Debug.h"
 #include "../Exception.h"
 
-namespace GreedyCollections {
+namespace GreedyContainers {
 namespace Internal {
 
 //##############################################################################

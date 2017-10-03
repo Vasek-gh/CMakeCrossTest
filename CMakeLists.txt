@@ -122,13 +122,12 @@ if(MSVC)
     set(CMAKE_CXX_FLAGS "/EHsc")
 endif()
 
-if(CMAKE_COMPILER_IS_GNUCXX)
+if(CMAKE_COMPILER_IS_GNUCXX AND NOT MINGW)
     add_definitions(-DGCC)
     message(STATUS "GCC")
     set(CMAKE_CXX_FLAGS "-fnon-call-exceptions -fexceptions -pthread")
 endif()
 
-aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} SRC_LIST)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/Test SRC_LIST)
 
 if (OS_WINDOWS)
@@ -139,12 +138,17 @@ if (POSIX)
     aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/Posix SRC_LIST)
 endif()
 
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} SRC_LIST)
+
 
 set(HEADERS
     "${CMAKE_CURRENT_SOURCE_DIR}/Memory.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Collections/Array.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/Collections/Base.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Collections/Chunks.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/Collections/Consts.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/Collections/DlList.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Collections/Holder.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/Collections/Queue.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/Collections/SlList.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/Collections/Stack.h"
