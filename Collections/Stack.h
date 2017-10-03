@@ -12,10 +12,10 @@ namespace Internal {
 //
 //##############################################################################
 
-template<class T, class Alloc, size_t ChunckSize>
-class ChunkedStack : public ChunkedContainer<T, Alloc, ChunckSize>
+template<class T, class Alloc, size_t ChunkSize>
+class ChunkedStack : public ChunkedContainer<T, Alloc, ChunkSize>
 {
-    using Parent = Internal::ChunkedContainer<T, Alloc, ChunckSize>;
+    using Parent = Internal::ChunkedContainer<T, Alloc, ChunkSize>;
     using TPtr = typename Parent::TPtr;
     using TChunk = typename Parent::TChunk;
     using TArray = typename Parent::TArray;
@@ -71,7 +71,7 @@ public:
 private:
     int getTailIndex()
     {
-        return (this->_count - 1) % ChunckSize;
+        return (this->_count - 1) % ChunkSize;
     }
 
     TChunk* getTailPrev()
@@ -97,10 +97,10 @@ private:
 //
 //##############################################################################
 
-template<class T, class Alloc, size_t ChunckSize = Internal::DEF_CHUNK_SIZE>
-class ObjStack final : public Internal::ChunkedStack<T, Alloc, ChunckSize>
+template<class T, class Alloc, size_t ChunkSize = Internal::DEF_CHUNK_SIZE>
+class ObjStack final : public Internal::ChunkedStack<T, Alloc, ChunkSize>
 {
-    using Parent = Internal::ChunkedStack<T, Alloc, ChunckSize>;
+    using Parent = Internal::ChunkedStack<T, Alloc, ChunkSize>;
 
     static_assert(
         std::is_class<T>::value,
@@ -122,10 +122,10 @@ public:
 //
 //##############################################################################
 
-template<class T, class Alloc, size_t ChunckSize = Internal::DEF_CHUNK_SIZE>
-class PtrStack final : public Internal::ChunkedStack<T*, Alloc, ChunckSize>
+template<class T, class Alloc, size_t ChunkSize = Internal::DEF_CHUNK_SIZE>
+class PtrStack final : public Internal::ChunkedStack<T*, Alloc, ChunkSize>
 {
-    using Parent = Internal::ChunkedStack<T*, Alloc, ChunckSize>;
+    using Parent = Internal::ChunkedStack<T*, Alloc, ChunkSize>;
 
     static_assert(
         std::is_class<T>::value,

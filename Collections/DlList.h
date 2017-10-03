@@ -6,8 +6,8 @@
 #include "../Debug.h"
 #include "../Exception.h"
 
-#include "Base.h"
 #include "Consts.h"
+#include "Nodes.h"
 
 namespace GreedyContainers {
 namespace Internal {
@@ -17,7 +17,7 @@ class BaseDoubleLinkedList
 {
 public:
     using NodeType = DlNode<T>;
-    using NodeAllocatorType = NodeAllocator<NodeType, Allocator>;
+    using NodeAllocatorType = NodePool<NodeType, Allocator>;
     using ItemHelperType = ItemHelper<T, NodeType>;
 public:
     using IterType = DlIterForward<T>;

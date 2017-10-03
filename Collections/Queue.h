@@ -12,10 +12,10 @@ namespace Internal {
 //
 //##############################################################################
 
-template<class T, class Alloc, size_t ChunckSize>
-class ChunkedQueue : public ChunkedContainer<T, Alloc, ChunckSize>
+template<class T, class Alloc, size_t ChunkSize>
+class ChunkedQueue : public ChunkedContainer<T, Alloc, ChunkSize>
 {
-    using Parent = Internal::ChunkedContainer<T, Alloc, ChunckSize>;
+    using Parent = Internal::ChunkedContainer<T, Alloc, ChunkSize>;
     using TPtr = typename Parent::TPtr;
 public:
     ChunkedQueue(Alloc& alloc, size_t capacity)
@@ -43,7 +43,7 @@ public:
         this-> _count--;
         _headIndex++;
 
-        if (_headIndex == ChunckSize || this->_count == 0) {
+        if (_headIndex == ChunkSize || this->_count == 0) {
             _headIndex = 0;
 
             if (this->_head != this->_tail) {
@@ -70,10 +70,10 @@ private:
 //
 //##############################################################################
 
-template<class T, class Alloc, size_t ChunckSize = Internal::DEF_CHUNK_SIZE>
-class ObjQueue final : public Internal::ChunkedQueue<T, Alloc, ChunckSize>
+template<class T, class Alloc, size_t ChunkSize = Internal::DEF_CHUNK_SIZE>
+class ObjQueue final : public Internal::ChunkedQueue<T, Alloc, ChunkSize>
 {
-    using Parent = Internal::ChunkedQueue<T, Alloc, ChunckSize>;
+    using Parent = Internal::ChunkedQueue<T, Alloc, ChunkSize>;
 
     static_assert(
         std::is_class<T>::value,
@@ -95,10 +95,10 @@ public:
 //
 //##############################################################################
 
-template<class T, class Alloc, size_t ChunckSize = Internal::DEF_CHUNK_SIZE>
-class PtrQueue final : public Internal::ChunkedQueue<T*, Alloc, ChunckSize>
+template<class T, class Alloc, size_t ChunkSize = Internal::DEF_CHUNK_SIZE>
+class PtrQueue final : public Internal::ChunkedQueue<T*, Alloc, ChunkSize>
 {
-    using Parent = Internal::ChunkedQueue<T*, Alloc, ChunckSize>;
+    using Parent = Internal::ChunkedQueue<T*, Alloc, ChunkSize>;
 
     static_assert(
         std::is_class<T>::value,

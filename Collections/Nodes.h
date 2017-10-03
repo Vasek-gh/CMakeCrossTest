@@ -274,15 +274,15 @@ public:
 
 //##############################################################################
 //
-// NodeAllocator
+// NodePool
 //
 //##############################################################################
 
 template<class NodeType, class Allocator>
-class NodeAllocator
+class NodePool
 {
 public:
-    NodeAllocator(Allocator& allocator, size_t chunkSize, size_t capacity)
+    NodePool(Allocator& allocator, size_t chunkSize, size_t capacity)
     {
         _top = nullptr;
         _allocator = &allocator;
@@ -294,7 +294,7 @@ public:
         allocChunk(capacity);
     }
 
-    NodeAllocator(NodeAllocator&& src)
+    NodePool(NodePool&& src)
     {
         ASSERT(src._top != nullptr);
         ASSERT(src._allocator != nullptr);

@@ -13,7 +13,7 @@
 #include "Collections/Stack.h"
 #include "Collections/Holder.h"
 #include "Collections/Array.h"
-
+#include "Collections/Pool.h"
 #include "TestStorage.h"
 #include "Test/TestSTLinearAllocator.h"
 
@@ -147,10 +147,12 @@ class Test
 public:
     Test(int a) {
         this->a = a;
+        objcount++;
     }
 
     ~Test() {
         a = 7;
+        objcount--;
     }
 
     void test() {
@@ -503,6 +505,26 @@ int main(int argc, char *argv[])
             for (auto value : l2) {
                 cout << value->a << endl;
             }*/
+        }
+
+        cout << endl;
+
+        {
+            using Pool = GreedyContainers::Pool<Test, SimpleAllocator, 2>;
+            Pool l(allocator, 3);
+
+            {
+                auto r = l.create(1);
+                {
+                    auto r2 = l.create(2);
+
+                    {
+                        auto r3 = l.create(3);
+                    }
+                }
+            }
+
+            auto r4 = l.create(4);
         }
 
         //test();

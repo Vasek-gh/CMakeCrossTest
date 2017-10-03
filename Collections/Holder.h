@@ -12,10 +12,10 @@ namespace Internal {
 //
 //##############################################################################
 
-template<class T, class Alloc, size_t ChunckSize>
-class ChunkedHolder : public ChunkedContainer<T, Alloc, ChunckSize>
+template<class T, class Alloc, size_t ChunkSize>
+class ChunkedHolder : public ChunkedContainer<T, Alloc, ChunkSize>
 {
-    using Parent = Internal::ChunkedContainer<T, Alloc, ChunckSize>;
+    using Parent = Internal::ChunkedContainer<T, Alloc, ChunkSize>;
     using TPtr = typename Parent::TPtr;
     using TChunk = typename Parent::TChunk;
     using TArray = typename Parent::TArray;
