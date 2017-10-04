@@ -527,6 +527,31 @@ int main(int argc, char *argv[])
             auto r4 = l.create(4);
         }
 
+        cout << endl;
+
+        {
+            using ObjHolder = GreedyContainers::ObjHolder<Test, SimpleAllocator, 2>;
+            using Pool = GreedyContainers::Pool<ObjHolder, SimpleAllocator, 2>;
+            Pool l(allocator, 3);
+
+            {
+                auto r = l.create(allocator, 3);
+                r->add(1);
+                r->add(2);
+                r->add(3);
+            }
+
+            {
+                auto r = l.create(allocator, 3);
+                r->add(4);
+                r->add(5);
+                r->add(6);
+            }
+
+        }
+
+
+
         //test();
     }
     catch (const Exception& e) {
