@@ -16,6 +16,7 @@
 #include "Collections/Pool.h"
 #include "TestStorage.h"
 #include "Test/TestSTLinearAllocator.h"
+#include "Test/TestFile.h"
 
 using namespace std;
 
@@ -110,6 +111,19 @@ void testStorage()
     try
     {
         TestStorage test;
+        test.run();
+    }
+    catch (const Exception& e) {
+        std::cerr << e.what() << std::endl;
+    }
+}
+
+void testFile()
+{
+    cout << "start testFile" << endl;
+    try
+    {
+        TestFile test;
         test.run();
     }
     catch (const Exception& e) {
@@ -215,6 +229,7 @@ int main(int argc, char *argv[])
 
     Memory::init();
 
+    testFile();
     testEnv();
     testAssert();
     testStorage();
